@@ -6,10 +6,27 @@ The workflow includes **EDA (Exploratory Data Analysis)**, **data preprocessing*
 
 ---
 
+## 🤖 Model & Comparison
+- **Baseline Model (Logistic Regression / Sklearn)**
+  - Provided a quick benchmark accuracy
+  - Simple and interpretable but limited for non-linear patterns
+
+- **Neural Network Model (Keras Sequential)**
+  - Trained for 100 epochs with scaled data
+  - Outperformed the baseline model on accuracy and ROC-AUC
+  - Captured more complex feature interactions
+
+- **Tuning**
+  - Applied **MinMaxScaler** for feature scaling → improved stability of ANN
+  - Epochs set to 100, but further tuning (early stopping, dropout, optimizer change) could boost generalization
+  - Next improvements: experiment with ensemble models (RandomForest, XGBoost) and hyperparameter tuning
+
+---
+
 ## 🎯 What I Learned
 - 🔑 Performed EDA to uncover correlations and data insights  
 - 📌 Handled multicollinearity and scaling features before training  
-- 🚀 Built and evaluated classification models with real-world data  
+- 🚀 Built and evaluated both baseline models and neural networks  
 
 ---
 
@@ -18,18 +35,19 @@ The workflow includes **EDA (Exploratory Data Analysis)**, **data preprocessing*
 - **Pandas**, **NumPy**
 - **Matplotlib**, **Seaborn**, **Plotly**
 - **Statsmodels**
+- **Scikit-learn**
+- **Keras (TensorFlow backend)**
 
 ---
 
 ## 📌 Evaluation / Next Step
-- ✅ The models achieved good baseline accuracy.  
-- 🔍 Next step: experiment with **ensemble models** (RandomForest, XGBoost) and apply **hyperparameter tuning** to improve generalization.  
+- ✅ Neural Network improved results over the baseline Logistic Regression  
+- 🔍 Next step: implement **hyperparameter tuning**, **dropout layers**, and test **ensemble methods** for better generalization  
 
 ---
 
 ## 🔗 View Notebook
-- [Jupyter Notebook](notebook.ipynb)  
-- [PDF Report](report.pdf)  
+- [Jupyter Notebook](Classifying Heart Diseases.ipynb)  
 
 ---
 
