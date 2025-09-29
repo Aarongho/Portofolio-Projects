@@ -1,0 +1,6 @@
+shiny
+bslib
+ggplot2
+plotly
+dplyr
+readxl
