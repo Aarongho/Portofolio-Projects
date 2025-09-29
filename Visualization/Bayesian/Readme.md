@@ -48,7 +48,8 @@ The goal is to create **clear, interpretable, and aesthetic visualizations** to 
 ---
 
 ## 🔗 View Project
-- [R Markdown Notebook](Obesity_Data_Visualization.Rmd)
+- [R Markdown Notebook](Informative.Rmd)
+- - [R Markdown Notebook](Uninformative.Rmd)
 
 ---
 
