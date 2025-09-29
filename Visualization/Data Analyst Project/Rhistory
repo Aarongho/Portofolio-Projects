@@ -1,0 +1,512 @@
+title = "Percentage of Penguins per Island by Species")
+#two numerical variable
+plot_ly(data = penguins, x = ~bill_length_mm, y = ~flipper_length_mm,
+type = "scatter", mode = "markers", marker = list(size = 10)) %>%
+layout(
+title = "Relationship between Bill Length and Flipper Length",
+xaxis = list(title = "Bill Length (mm)"),
+yaxis = list(title = "Flipper Length (mm)")
+)
+#two numerical variable
+plot_ly(data = penguins, x = ~bill_length_mm, y = ~flipper_length_mm,
+type = "scatter", mode = "markers", marker = list(size = 10)) %>%
+layout(
+title = "Relationship between Bill Length and Flipper Length",
+xaxis = list(title = "Bill Length (mm)"),
+yaxis = list(title = "Flipper Length (mm)"))
+#two numerical variable
+plot_ly(data = penguins, x = ~bill_length_mm, y = ~flipper_length_mm,
+type = "scatter", mode = "markers", marker = list(size = 5)) %>%
+layout(
+title = "Relationship between Bill Length and Flipper Length",
+xaxis = list(title = "Bill Length (mm)"),
+yaxis = list(title = "Flipper Length (mm)"))
+#two numerical variable
+plot_ly(data = penguins, x = ~bill_length_mm, y = ~flipper_length_mm,
+type = "scatter", mode = "lines+markers", marker = list(size = 5)) %>%
+layout(
+title = "Relationship between Bill Length and Flipper Length",
+xaxis = list(title = "Bill Length (mm)"),
+yaxis = list(title = "Flipper Length (mm)"))
+#two numerical variable
+plot_ly(data = penguins, x = ~bill_length_mm, y = ~flipper_length_mm,
+type = "scatter", mode = "markers", marker = list(size = 5)) %>%
+layout(
+title = "Relationship between Bill Length and Flipper Length",
+xaxis = list(title = "Bill Length (mm)"),
+yaxis = list(title = "Flipper Length (mm)"))
+install.packages("ggiraph")
+library(ggiraph)
+library(palmerpenguins)
+library(dplyr)
+#Categorial variable
+fig_categorical <- penguins %>%
+ggplot(aes(x = island)) +
+geom_bar_interactive(aes(tooltip = paste("count:", after_stat(count)),
+data_id = island))
+#Categorial variable
+fig_categorical <- penguins %>%
+ggplot(aes(x = island)) +
+geom_bar_interactive(aes(tooltip = paste("count:", after_stat(count)),
+data_id = island))
+data("penguins")
+fig_categorical <- penguins %>%
+ggplot(aes(x = island)) +
+geom_bar_interactive(aes(tooltip = paste("count:", after_stat(count)),
+data_id = island))
+girafe(ggobj = fig_categorical)
+#Categorial variable
+fig_categorical <- penguins %>%
+ggplot(aes(x = island)) +
+geom_bar_interactive(aes(tooltip = paste("count:", after_stat(count)),
+data_id = island)) +
+labs(title = "Number of Observations on Each Island")
+girafe(ggobj = fig_categorical)
+#Numerical variable
+fig_numerical <- penguins |>
+ggplot(aes(x = bill_length_mm)) +
+geom_histogram_interactive(
+aes(tooltip = paste("bill_length_mm:", after_stat(count))))
+girafe(ggobj = fig_numerical)
+#Numerical variable
+fig_numerical <- penguins  %>%
+ggplot(aes(x = bill_length_mm)) +
+geom_histogram_interactive(
+aes(tooltip = paste("bill_length_mm:", after_stat(count)))) +
+labs(title = "Distribution of Bill Length (mm)")
+girafe(ggobj = fig_numerical)
+#Numerical and categorical variable
+fig_density <- penguins %>%
+ggplot(aes(x = body_mass_g, color = species, fill = species)) +
+geom_density_interactive(
+aes(tooltip = paste("Species:", species)),
+linewidth = 0.75, alpha = 0.5) +
+labs(title = "Density Distribution of Body Mass by Species")
+#Numerical and categorical variable
+fig_density <- penguins %>%
+ggplot(aes(x = body_mass_g, color = species, fill = species)) +
+geom_density_interactive(
+aes(tooltip = paste("Species:", species)),
+linewidth = 0.75, alpha = 0.5) +
+labs(title = "Density Distribution of Body Mass by Species")
+girafe(ggobj = fig_density)
+#Two categorial variable
+fig_two_categorical <- penguins %>%
+ggplot(aes(x = species, fill = island)) +
+geom_bar_interactive(
+aes(tooltip = paste(fill, ":", after_stat(count)),
+data_id = island),
+position = "fill") +
+labs(title = "Proportion of Species by Island")
+girafe(ggobj = fig_two_categorical)
+#Two numerical variable
+fig_two_columns <- penguins %>%
+ggplot(aes(x = bill_length_mm, y = flipper_length_mm)) +
+geom_point_interactive(
+aes(tooltip = paste("bill_length_mm:", bill_length_mm, "<br>",
+"flipper_length_mm:", flipper_length_mm)),
+size = 2) +
+labs(title = "Relationship between Bill Length and Flipper Length")
+girafe(ggobj = fig_two_columns)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(readxl)
+library(plotly)
+covid_data <- read_excel("C:/Users/Kelvin Jonathan/OneDrive/Desktop/Data Science/Semester 2/Data Mining/Catetan/Interactive graph/COVID-19-geographic-disbtribution-worldwide-2020-12-14.xlsx")
+glimpse(covid_data)
+str(covid_data)
+covid_data$dateRep <- as.Date(covid_data$dateRep,format = "%d/%m/%Y")
+covid_data<-na.omit(covid_data)
+covid_data <- covid_data%>%
+mutate(
+case_per_100k = (cases/deaths)*100000,
+case_fatality_rate = (deaths / cases)*100,
+death_rate = (deaths/popData2019)*100,
+)
+weekly_data <- covid_data%>%
+group_by(geoId, week = floor_date(dateRep, "week"))%>%
+summarise(
+total_case = sum(cases),
+total_death = sum(deaths),
+average_fatality = mean(case_fatality_rate,na.rm=TRUE),
+.groups = 'drop'
+)
+weekly_data
+monthly_data <- covid_data%>%
+group_by(geoId, month = floor_date(dateRep, "month"))%>% #group data sesuai floordate(day/month/year yg udah diformat di atas)
+summarise(
+total_case = sum(cases),
+total_death = sum(deaths),
+average_fatality = mean(death_rate,na.rm=TRUE),
+.groups = 'drop'#ungroup
+)
+monthly_data
+monthly_data_con <- covid_data%>%
+group_by(continentExp, month = floor_date(dateRep, "month"))%>% #group data sesuai floordate(day/month/year yg udah diformat di atas)
+summarise(
+total_case = sum(cases),
+total_death = sum(deaths),
+average_fatality = mean(death_rate,na.rm=TRUE),
+.groups = 'drop'#ungroup
+)
+ggplot(monthly_data_con, aes(x = month , y = continentExp,fill = average_fatality)) +
+geom_tile() + scale_fill_viridis_c(option = "C") + labs(title = "Monthly Covid Death Rate per Continent",x = "Month", y ="Continents",fill = "Death Rate") + theme_minimal()
+cumulative_regional_data <- covid_data%>%
+arrange(continentExp,dateRep)%>%
+group_by(continentExp)%>%
+mutate(
+cumulative_Case = cumsum(cases),
+cumulative_deaths = cumsum(deaths)
+)
+ggplot(cumulative_regional_data,aes(x = dateRep, y = cumulative_Case, color = continentExp)) +
+geom_line() + labs(title ="JUdul", x = "date", y = "cum case") +theme_minimal() + theme(legend.position = "bottom")
+###################----
+plot_ly(
+data = covid_data,
+x = ~log(death_rate),
+type = "histogram"
+)
+dens <- density(log(covid_data$popData2019))
+plot_ly(
+data  =covid_data,
+x = ~log(popData2019),
+type = "histogram",
+name = "Histogram")%>%
+add_lines(x = dens$x, y =dens$y, yaxis = "y2",name = "Density")%>%
+layout(yaxis2 = list(overlaying = "y",
+side = "right",
+rangemode = "tozero"))
+filtered_data <- covid_data %>%
+filter(continentExp %in% c("Asia", "Africa", "America"))
+plot_ly(
+data= filtered_data,
+x = ~deaths,
+y = ~cases,
+type = "scatter",
+mode = "markers",
+color = ~continentExp,
+symbol = ~continentExp
+)
+plot_ly(
+data  =covid_data,
+x = ~log(popData2019),
+type = "histogram",
+name = "Histogram")%>%
+add_lines(x = dens$x, y =dens$y, yaxis = "y2",name = "Density")%>%
+layout(yaxis2 = list(overlaying = "y",
+side = "right",
+rangemode = "tozero"))
+filtered_data <- covid_data %>%
+filter(continentExp %in% c("Asia", "Africa", "America"))
+plot_ly(
+data= filtered_data,
+x = ~deaths,
+y = ~cases,
+type = "scatter",
+mode = "markers",
+color = ~continentExp,
+symbol = ~continentExp
+)
+View(covid_data)
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countriesAndTerritories) %>%
+summarise(TotalCases = sum(cases))
+View(filtered_data2)
+View(filtered_data2)
+plot_ly(
+data= filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = "bar",
+)
+plot <- plot_ly(total_cases_by_country,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+text = ~paste('Total Cases: ', TotalCases),
+hoverinfo = 'text') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+text = ~paste('Total Cases: ', TotalCases),
+hoverinfo = 'text') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+### SOAL
+# interactive total cases by country bar plot
+total_cases_by_country <- data %>%
+group_by(countriesAndTerritories, countryterritoryCode) %>%
+summarise(TotalCases = sum(cases, na.rm = TRUE)) %>%
+arrange(desc(TotalCases))
+# Create the plot
+plot <- plot_ly(total_cases_by_country,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+text = ~paste('Total Cases: ', TotalCases, '<br>Country Code: ', countryterritoryCode),
+hoverinfo = 'text') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+# Show the plot
+plot
+### SOAL
+# interactive total cases by country bar plot
+total_cases_by_country <- data %>%
+group_by(countriesAndTerritories, countryterritoryCode) %>%
+summarise(TotalCases = sum(cases, na.rm = TRUE)) %>%
+arrange(desc(TotalCases))
+# Create the plot
+plot <- plot_ly(total_cases_by_country,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+text = ~paste('Total Cases: ', TotalCases, '<br>Country Code: ', countryterritoryCode),
+hoverinfo = 'text') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+### SOAL
+# interactive total cases by country bar plot
+total_cases_by_country <- data %>%
+group_by(countriesAndTerritories, countryterritoryCode) %>%
+summarise(TotalCases = sum(cases, na.rm = TRUE)) %>%
+arrange(desc(TotalCases))
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countriesAndTerritories) %>%
+summarise(TotalCases = sum(cases))
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countryterritoryCode)%>%
+group_by(countriesAndTerritories) %>%
+summarise(TotalCases = sum(cases))
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countryterritoryCode)%>%
+summarise(TotalCases = sum(cases))
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countryterritoryCode)%>%
+summarise(TotalCases = sum(cases))
+plot <- plot_ly(filtered_data2,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+plot <- plot_ly(filtered_data2,
+x = ~countryterritoryCode,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+plot <- plot_ly(filtered_data2,
+x = ~countryterritoryCode,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+### SOAL
+# interactive total cases by country bar plot
+filtered_data <- covid_data %>%
+group_by(countryterritoryCode, countriesAndTerritories) %>%
+summarise(TotalCases = sum(cases, na.rm = TRUE)) %>%
+arrange(desc(TotalCases))
+# Create a list of unique countryterritoryCodes
+country_codes <- unique(filtered_data$countryterritoryCode)
+# Initialize an empty list to store plots
+plots <- list()
+# Loop through each country code to create subplots
+for (code in country_codes) {
+subset_data <- filtered_data %>% filter(countryterritoryCode == code)
+plot <- plot_ly(subset_data,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+name = code,
+text = ~paste('Total Cases: ', TotalCases, '<br>Country Code: ', countryterritoryCode),
+hoverinfo = 'text') %>%
+layout(title = paste("Total COVID-19 Cases for", code),
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plots[[code]] <- plot
+}
+# Display all plots
+for (plot in plots) {
+print(plot)
+}
+### SOAL
+# interactive total cases by country bar plot
+filtered_data <- covid_data %>%
+group_by(countryterritoryCode, countriesAndTerritories) %>%
+summarise(TotalCases = sum(cases, na.rm = TRUE)) %>%
+arrange(desc(TotalCases))
+# Create a list of unique countryterritoryCodes
+country_codes <- unique(filtered_data$countryterritoryCode)
+# Initialize an empty list to store plots
+plots <- list()
+# Loop through each country code to create subplots
+for (code in country_codes) {
+subset_data <- filtered_data %>% filter(countryterritoryCode == code)
+plot <- plot_ly(subset_data,
+x = ~countriesAndTerritories,
+y = ~TotalCases,
+type = 'bar',
+name = code,
+text = ~paste('Total Cases: ', TotalCases, '<br>Country Code: ', countryterritoryCode),
+hoverinfo = 'text') %>%
+layout(title = paste("Total COVID-19 Cases for", code),
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plots[[code]] <- plot
+}
+# Display all plots
+for (plot in plots) {
+print(plot)
+}
+### SOAL
+# interactive total cases by country bar plot
+filtered_data2 <- covid_data %>%
+group_by(countryterritoryCode)%>%
+summarise(TotalCases = sum(cases))
+plot <- plot_ly(filtered_data2,
+x = ~countryterritoryCode,
+y = ~TotalCases,
+type = 'bar') %>%
+layout(title = "Total COVID-19 Cases by Country",
+xaxis = list(title = "Country"),
+yaxis = list(title = "Total Cases"))
+plot
+# interactive line plot tren kematian overtime for selected country
+covid_data$dateRep <- as.Date(covid_data$dateRep, format="%d/%m/%Y")
+plot_deaths_trend <- function(country) {
+country_data <- covid_data %>% filter(countriesAndTerritories == country)
+plot <- plot_ly(country_data,
+x = ~dateRep,
+y = ~deaths,
+type = 'scatter',
+mode = 'lines+markers',
+text = ~paste('Date: ', dateRep, '<br>Deaths: ', deaths),
+hoverinfo = 'text') %>%
+layout(title = paste("COVID-19 Deaths Trend in", country),
+xaxis = list(title = "Date"),
+yaxis = list(title = "Number of Deaths"))
+return(plot)
+}
+plot_deaths_trend("Italy")
+plot <- plot_ly(country_data,
+x = ~dateRep,
+y = ~deaths,
+type = 'scatter',
+mode = 'lines',
+text = ~paste('Date: ', dateRep, '<br>Deaths: ', deaths),
+hoverinfo = 'text') %>%
+layout(title = paste("COVID-19 Deaths Trend in", country),
+xaxis = list(title = "Date"),
+yaxis = list(title = "Number of Deaths"))
+return(plot)
+country_data <- covid_data %>% filter(countriesAndTerritories == country)
+plot <- plot_ly(country_data,
+x = ~dateRep,
+y = ~deaths,
+type = 'scatter',
+mode = 'lines',
+text = ~paste('Date: ', dateRep, '<br>Deaths: ', deaths),
+hoverinfo = 'text') %>%
+layout(title = paste("COVID-19 Deaths Trend in", country),
+xaxis = list(title = "Date"),
+yaxis = list(title = "Number of Deaths"))
+# interactive line plot tren kematian overtime for selected country
+covid_data$dateRep <- as.Date(covid_data$dateRep, format="%d/%m/%Y")
+plot_deaths_trend <- function(country){
+country_data <- covid_data %>% filter(countriesAndTerritories == country)
+plot <- plot_ly(country_data,
+x = ~dateRep,
+y = ~deaths,
+type = 'scatter',
+mode = 'lines',
+text = ~paste('Date: ', dateRep, '<br>Deaths: ', deaths),
+hoverinfo = 'text') %>%
+layout(title = paste("COVID-19 Deaths Trend in", country),
+xaxis = list(title = "Date"),
+yaxis = list(title = "Number of Deaths"))
+return(plot)
+}
+plot_deaths_trend("Italy")
+plot_deaths_trend("Afghanistan")
+library(shiny); runApp('C:/Users/Kelvin Jonathan/Downloads/AOL.R')
+runApp('C:/Users/Kelvin Jonathan/Downloads/AOL.R')
+library(dplyr)
+data = read.table(file.choose(), sep=",", header = T, skip = 1)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+data2 = read.table(file.choose(), sep=",", header = T)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+source("~/.active-rstudio-document", echo=TRUE)
+runApp('C:/Users/Kelvin Jonathan/Downloads/AOL.R')
+runApp('C:/Users/Kelvin Jonathan/Downloads/Code AOL/AOL.R')
+runApp('C:/Users/Kelvin Jonathan/Downloads/Code AOL/AOL.R')
+runApp('C:/Users/Kelvin Jonathan/Downloads/Code AOL/AOL.R')
+library(shiny); runApp('C:/Users/Kelvin Jonathan/Downloads/Code AOL/AOL.R')

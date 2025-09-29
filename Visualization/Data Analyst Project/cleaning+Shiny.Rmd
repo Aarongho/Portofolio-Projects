@@ -1,0 +1,562 @@
+---
+title: "Quality of Education in Indonesia in 2022"
+output: html_document
+date: "2024-06-12"
+---
+
+# 1. Cleaning Data for Distribution of Teachers in Indonesia in 2022
+
+```{r}
+library(dplyr)
+data = read.table(file.choose(), sep=",", header = T, skip = 1)
+
+# looking for missing data
+missing_summary <- data %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+print(missing_summary)
+summary(data)
+column_types <- sapply(data, class)
+
+# replace data with "Unknown" if missing data is char
+dataNew <- data %>%
+  mutate_if(is.character, ~ifelse(is.na(.), "Unknown", .))
+
+# replace data with column's median if missing data is numerical
+dataNew <- data %>%
+  mutate_all(
+    funs(if(is.numeric(.)) replace(., is.na(.), median(., na.rm = TRUE)) else .)
+  )
+
+# Looking for Duplicated Data
+duplicated_rows <- duplicated(data)
+duplicated_rows
+
+# Make a new data without duplicates in variabel called unique data specific
+unique_data_specific <- distinct(data, .keep_all = TRUE)
+unique_data_specific
+
+# Function to detect outliers using IQR method
+outliers_iqr <- function(df) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      Q1 <- quantile(., 0.25, na.rm = TRUE)
+      Q3 <- quantile(., 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      sum(. < lower_bound | . > upper_bound, na.rm = TRUE)
+    }, .names = "IQR_{.col}"))
+}
+
+# Function to detect outliers using Z-Score method
+outliers_zscore <- function(df, threshold = 3) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      z_scores <- scale(.)
+      sum(abs(z_scores) > threshold, na.rm = TRUE)
+    }, .names = "ZScore_{.col}"))
+}
+
+# Detecting outliers
+iqr_outliers_summary <- outliers_iqr(data)
+zscore_outliers_summary <- outliers_zscore(data)
+
+# Print
+print(iqr_outliers_summary)
+print(zscore_outliers_summary)
+```
+
+**Overview and Importing Datasets**
+
+Here’s an explanation on our group's coding cleaning process. First of all we will access the dplyr and skimr libraries. After that we will read the file from the data we provide. Here there are 4 data, we take 4 factors, namely the number of libraries, the number of school participation per age level, the number of schools and teachers, and finally the influence of poverty on completing education. First of all, of course, we will overview the dataframe which will be reviewed with a view and see the summary data with a skim. 
+
+**Detect Missing data**
+
+After that, we will see the amount of missing data in our file. Here the system will detect and count the number of missing data per column via summarise(across(everything(), \~ sum(is.na(.)))).
+
+**Changing Missing Data**
+
+After detecting missing data, we will change the missing data. If the data variable is in the form of characters and there is missing data, it will be changed to "Unknown", this aims to not eliminate the uniqueness of the data because if we replace it with the most mode then we have removed the uniqueness of the data. Meanwhile, we will change the numerical data by changing the value of the missing data to the median. This aims to prevent skewness in the data so that our data maintains its distribution.
+
+**Duplicated Data and Outliers**
+
+Next, we will look for whether there is duplicated data. If there is duplicated data, we will store our data in a new dataframe that does not have duplicated data. After cleaning missing and duplicated data, we clean outliers contained in the data. Here we use two methods at once to detect outliers using the IQR method and Z-score. Here we create an IQR and Z-score function that accepts data frame parameters so that we can easily know whether our data has outliers or not.
+
+# 2. Cleaning Data for School Participation Rates in Indonesia from 2002 to 2022
+
+```{r}
+library(dplyr)
+data = read_excel(file.choose())
+
+# looking for missing data
+missing_summary <- data %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+print(missing_summary)
+summary(data)
+column_types <- sapply(data, class)
+
+# replace data with "Unknown" if missing data is char
+dataNew <- data %>%
+  mutate_if(is.character, ~ifelse(is.na(.), "Unknown", .))
+
+# replace data with column's median if missing data is numerical
+dataNew <- data %>%
+  mutate_all(
+    funs(if(is.numeric(.)) replace(., is.na(.), median(., na.rm = TRUE)) else .)
+  )
+
+# Looking for Duplicated Data
+duplicated_rows <- duplicated(data)
+duplicated_rows
+
+# Make a new data without duplicates in variabel called unique data specific
+unique_data_specific <- distinct(data, .keep_all = TRUE)
+unique_data_specific
+
+# Function to detect outliers using IQR method
+outliers_iqr <- function(df) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      Q1 <- quantile(., 0.25, na.rm = TRUE)
+      Q3 <- quantile(., 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      sum(. < lower_bound | . > upper_bound, na.rm = TRUE)
+    }, .names = "IQR_{.col}"))
+}
+
+# Function to detect outliers using Z-Score method
+outliers_zscore <- function(df, threshold = 3) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      z_scores <- scale(.)
+      sum(abs(z_scores) > threshold, na.rm = TRUE)
+    }, .names = "ZScore_{.col}"))
+}
+
+# Detecting outliers
+iqr_outliers_summary <- outliers_iqr(data)
+zscore_outliers_summary <- outliers_zscore(data)
+
+# Print
+print(iqr_outliers_summary)
+print(zscore_outliers_summary)
+```
+
+# 3. Cleaning Data for Relationship Between Educational Attainment and Poverty in Indonesia in 2022
+
+```{r}
+library(dplyr)
+data = read.table(file.choose(), sep=",", header = T, skip = 1)
+
+# looking for missing data
+missing_summary <- data %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+print(missing_summary)
+summary(data)
+column_types <- sapply(data, class)
+
+# replace data with "Unknown" if missing data is char
+dataNew <- data %>%
+  mutate_if(is.character, ~ifelse(is.na(.), "Unknown", .))
+
+# replace data with column's median if missing data is numerical
+dataNew <- data %>%
+  mutate_all(
+    funs(if(is.numeric(.)) replace(., is.na(.), median(., na.rm = TRUE)) else .)
+  )
+
+# Looking for Duplicated Data
+duplicated_rows <- duplicated(data)
+duplicated_rows
+
+# Make a new data without duplicates in variabel called unique data specific
+unique_data_specific <- distinct(data, .keep_all = TRUE)
+unique_data_specific
+
+# Function to detect outliers using IQR method
+outliers_iqr <- function(df) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      Q1 <- quantile(., 0.25, na.rm = TRUE)
+      Q3 <- quantile(., 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      sum(. < lower_bound | . > upper_bound, na.rm = TRUE)
+    }, .names = "IQR_{.col}"))
+}
+
+# Function to detect outliers using Z-Score method
+outliers_zscore <- function(df, threshold = 3) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      z_scores <- scale(.)
+      sum(abs(z_scores) > threshold, na.rm = TRUE)
+    }, .names = "ZScore_{.col}"))
+}
+
+# Detecting outliers
+iqr_outliers_summary <- outliers_iqr(data)
+zscore_outliers_summary <- outliers_zscore(data)
+
+# Print
+print(iqr_outliers_summary)
+print(zscore_outliers_summary)
+```
+
+# 4. Cleaning Data for Distribution of Libraries in Indonesia for the Academic Year 2022/2023
+
+```{r}
+library(dplyr)
+data = read.table(file.choose(), sep=",", header = T, skip = 1)
+
+# looking for missing data
+missing_summary <- data %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+print(missing_summary)
+summary(data)
+column_types <- sapply(data, class)
+
+# replace data with "Unknown" if missing data is char
+dataNew <- data %>%
+  mutate_if(is.character, ~ifelse(is.na(.), "Unknown", .))
+
+# replace data with column's median if missing data is numerical
+dataNew <- data %>%
+  mutate_all(
+    funs(if(is.numeric(.)) replace(., is.na(.), median(., na.rm = TRUE)) else .)
+  )
+
+# Looking for Duplicated Data
+duplicated_rows <- duplicated(data)
+duplicated_rows
+
+# Make a new data without duplicates in variabel called unique data specific
+unique_data_specific <- distinct(data, .keep_all = TRUE)
+unique_data_specific
+
+# Function to detect outliers using IQR method
+outliers_iqr <- function(df) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      Q1 <- quantile(., 0.25, na.rm = TRUE)
+      Q3 <- quantile(., 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      sum(. < lower_bound | . > upper_bound, na.rm = TRUE)
+    }, .names = "IQR_{.col}"))
+}
+
+# Function to detect outliers using Z-Score method
+outliers_zscore <- function(df, threshold = 3) {
+  df %>%
+    summarise(across(where(is.numeric), ~{
+      z_scores <- scale(.)
+      sum(abs(z_scores) > threshold, na.rm = TRUE)
+    }, .names = "ZScore_{.col}"))
+}
+
+# Detecting outliers
+iqr_outliers_summary <- outliers_iqr(data)
+zscore_outliers_summary <- outliers_zscore(data)
+
+# Print
+print(iqr_outliers_summary)
+print(zscore_outliers_summary)
+```
+
+# 5. Visualization using Shiny
+
+```{r}
+library(shiny)
+library(bslib)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(readxl)
+
+
+data = read.table(file.choose(), sep=",", header = T)
+data2 = read.table(file.choose(), sep=",", header = T)
+data3 = read.table(file.choose(), sep=",", header = T)
+data4 = read.table(file.choose(), sep=",", header = T)
+
+dataPartisipasi = read_excel(file.choose())
+
+education_2022 = read.table(file.choose(), sep=",", header = T)
+poverty_2022 = read.table(file.choose(), sep=",", header = T)
+
+education_2022 <- na.omit(education_2022)
+poverty_2022 <- na.omit(poverty_2022)
+
+education_2022$Provinsi <- tolower(education_2022$Provinsi)
+poverty_2022$Provinsi <- tolower(poverty_2022$Provinsi)
+
+education_2022$Provinsi[education_2022$Provinsi == "kep. bangka belitung"] <- "kepulauan bangka belitung"
+education_2022$Provinsi[education_2022$Provinsi == "kep. riau"] <- "kepulauan riau"
+education_2022$Provinsi[education_2022$Provinsi == "di yogyakarta"] <- "di. yogyakarta"
+final <- merge(poverty_2022,education_2022, by.x= "Provinsi")
+
+
+library_data <- read.table(file.choose(), sep=",", header = T)
+
+library_data <- library_data %>%
+  select(Province = `Provinsi`, Total_perpustakaan_per_provinsi = `Total.perpustakaan.per.provinsi`) %>%
+  filter(!is.na(Total_perpustakaan_per_provinsi)) %>%
+  mutate(
+    Province = gsub("Prov. ", "", Province),
+    Total_perpustakaan_per_provinsi = as.numeric(Total_perpustakaan_per_provinsi)
+  )
+
+ui <- navbarPage(
+  title = "Quality of Education in Indonesia in 2022",
+  theme = bs_theme(bootswatch = "morph"),
+  navbarMenu(
+    title = "Plots",
+    tabPanel(
+      title = "Distribution of Teachers in Indonesia in 2022",
+      fluidPage(
+        fluidRow(
+          titlePanel("Distribution of Teachers in Indonesia in 2022"),
+          column(
+            width = 6,
+            selectInput(
+              inputId = "x",
+              label = "Choice of Option:",
+              choices = unique(data$Provinsi),
+              selected = "Aceh"
+            )
+          )
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotlyOutput(outputId = "barplot")
+          )
+        )
+      )
+    ),
+    
+    tabPanel(
+      title = "School Participation Rates in Indonesia from 2002 to 2022",
+      fluidPage(
+        fluidRow(
+          titlePanel("School Participation Rates in Indonesia from 2002 to 2022")
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotlyOutput(outputId = "lineplot")
+          )
+        )
+      )
+    ),
+    
+    tabPanel(
+      title = "Relationship Between Educational Attainment and Poverty in Indonesia in 2022",
+      fluidPage(
+        fluidRow(
+          titlePanel("Relationship Between Educational Attainment and Poverty in Indonesia in 2022"),
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotlyOutput(outputId = "scatter")
+          )
+        )
+      )
+    ),
+    
+    tabPanel(
+      title = "Distribution of Libraries in Indonesia for the Academic Year 2022/2023",
+      fluidPage(
+        fluidRow(
+          titlePanel("Distribution of Libraries in Indonesia for the Academic Year 2022/2023"),
+          column(
+            width = 6,
+            selectInput(
+              inputId = "library_choice",
+              label = "Choose an Option:",
+              choices = c("5 Highest", "5 Lowest"),
+              selected = "5 Highest"
+            )
+          )
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotlyOutput(outputId = "library_plot")
+          )
+        )
+      )
+    )
+    
+  )
+)
+    
+server <- function(input, output) {
+  output$barplot <- renderPlotly({
+    plot_ly(
+      data = subset(data, Provinsi %in% input$x), 
+      y = data[data$Provinsi %in% input$x, "Jumlah.Guru.SD..Negeri.Swasta."],
+      x = subset(data, Provinsi %in% input$x)$Provinsi,
+      type = "bar",
+      color = "blue",
+      name = "Total SD Teachers"
+    ) %>%
+      add_bars(
+        data = subset(data2, Provinsi %in% input$x), 
+        x = subset(data2, Provinsi %in% input$x)$Provinsi,
+        y = data2[data2$Provinsi %in% input$x, "Jumlah.Guru.SMP..Negeri.Swasta."],
+        color = "orange",
+        name = "Total SMP Teachers"
+      ) %>%
+      add_bars(
+        data = subset(data3, Provinsi %in% input$x), 
+        x = subset(data3, Provinsi %in% input$x)$Provinsi,
+        y = data3[data3$Provinsi %in% input$x, "Jumlah.Guru.SMA..Negeri.Swasta."],
+        color = "red",
+        name = "Total SMA Teachers"
+      ) %>%
+      add_bars(
+        data = subset(data4, Provinsi %in% input$x), 
+        x = subset(data4, Provinsi %in% input$x)$Provinsi,
+        y = data4[data4$Provinsi %in% input$x, "Jumlah.Guru.SMK..Negeri.Swasta."],
+        color = "green",
+        name = "Total SMK Teachers"
+      )
+  })
+  
+  output$lineplot <- renderPlotly({
+    plot_ly(
+      data = dataPartisipasi,
+      x = ~dataPartisipasi$Tahun,
+      y = ~dataPartisipasi$`7-12`,
+      type = 'scatter',
+      mode = 'lines',
+      name = '7-12'
+    ) %>%
+      add_trace(
+        y = ~dataPartisipasi$`13-15`,
+        name = '13-15',
+        mode = 'lines'
+      ) %>%
+      add_trace(
+        y = ~dataPartisipasi$`16-18`,
+        name = '16-18',
+        mode = 'lines'
+      ) %>%
+      add_trace(
+        y = ~dataPartisipasi$`19-24`,
+        name = '19-24',
+        mode = 'lines'
+      ) %>%
+      layout(
+        title = "Participation by Age Group",
+        xaxis = list(title = "Year"),
+        yaxis = list(title = "Participation Percentage")
+      )
+  })
+  
+ output$scatter <- renderPlotly({
+  lm_model <- lm(Rata.rata.kemiskinan.tahun.2022 ~ Rata.rata.penyelesaian.pendidikan.tahun.2022, data = final)
+  final$trendline <- predict(lm_model)
+
+  cor_test <- cor.test(final$Rata.rata.penyelesaian.pendidikan.tahun.2022, final$Rata.rata.kemiskinan.tahun.2022)
+  cor_value <- round(cor_test$estimate, 2)
+  p_value <- format.pval(cor_test$p.value, digits = 3)
+
+  plot_ly(
+    data = final,
+    x = ~Rata.rata.penyelesaian.pendidikan.tahun.2022,
+    y = ~Rata.rata.kemiskinan.tahun.2022,
+    type = 'scatter',
+    mode = 'markers',
+    text = ~Provinsi,
+    name = 'Correlation',
+    marker = list(size = 10)
+  ) %>%
+    add_lines(
+      x = ~Rata.rata.penyelesaian.pendidikan.tahun.2022,
+      y = ~trendline,
+      line = list(color = 'darkorange'),
+      name = 'Trendline'
+    ) %>%
+    layout(
+      title = paste("Relationship Between Educational Attainment and Poverty in Indonesia in 2022",
+                    "<br>Correlation: ", cor_value, ", p-value: ", p_value),
+      xaxis = list(title = "Average Educational Attainment (2022)"),
+      yaxis = list(title = "Average Poverty Rate (2022)")
+    )
+})
+ 
+ output$library_plot <- renderPlotly({
+   library_data_sorted <- library_data %>%
+     arrange(desc(Total_perpustakaan_per_provinsi))
+   
+   top5_highest <- library_data_sorted %>%
+     head(5)
+   
+   top5_lowest <- library_data_sorted %>%
+     tail(5)
+   
+   selected_data <- if(input$library_choice == "5 Highest"){
+     top5_highest
+   }else {
+     top5_lowest
+   }
+   
+   plot_ly(
+     data = selected_data,
+     x = ~Province,
+     y = ~Total_perpustakaan_per_provinsi,
+     type = 'bar',
+     color = ~Province,
+     text = ~Total_perpustakaan_per_provinsi
+   ) %>%
+     layout(
+       title = paste(input$library_choice, "Distribution of Libraries in Indonesia for the Academic Year 2022/2023"),
+       xaxis = list(title = "Province"),
+       yaxis = list(title = "Total Libraries")
+     )
+ })
+  
+}
+shinyApp(ui = ui, server = server)
+
+```
+
+**Data Preparation**
+
+The app starts by loading several datasets using the read.table and read_excel functions. These datasets include information about the distribution of teachers and libraries, school participation rates, educational attainment, and poverty rates in various provinces of Indonesia. Data cleaning steps are performed, such as removing missing values with na.omit, converting province names to lowercase for consistency, and merging the education and poverty datasets on the province column.
+
+**Data Transformation**
+
+For the library data, the app selects and filters relevant columns, removes any "Prov." prefixes from province names, and abbreviates "Kepulauan" to "Kep." using the gsub function. The numeric values for the total number of libraries are also converted to ensure proper plotting.
+
+**User Interface**
+
+The UI is created using navbarPage from the Shiny library, with a bootswatch theme applied using bs_theme. The UI is divided into multiple tabs, each corresponding to a different plot:
+
+-   Distribution of Teachers: Users can select a province to view the distribution of teachers at various school levels (SD, SMP, SMA, SMK) using a bar plot.
+
+-   School Participation Rates: A line plot shows school participation rates for different age groups over the years 2002 to 2022.
+
+-   Educational Attainment and Poverty: A scatter plot displays the relationship between educational attainment and poverty rates, with a trendline and correlation information.
+
+-   Distribution of Libraries: Users can choose to see the top 5 provinces with the highest or lowest number of libraries in a bar plot.
+
+**Server Logic**
+
+The server logic handles the rendering of the plots based on user inputs:
+
+-   Bar Plot for Teachers: Uses plot_ly to create bar plots showing the number of teachers at different school levels. The plot updates based on the selected province.
+
+-   Line Plot for Participation Rates: Plots participation rates for various age groups over time using plot_ly.
+
+-   Scatter Plot for Educational Attainment and Poverty: A scatter plot with a trendline is created using plot_ly, showing the relationship between educational attainment and poverty rates. The correlation coefficient and p-value are displayed in the plot title.
+
+-   Bar Plot for Libraries: Based on the user's choice of top 5 highest or lowest, the app sorts the data and creates a bar plot using plot_ly.
