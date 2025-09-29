@@ -55,5 +55,5 @@ The dataset was analyzed, preprocessed, and trained with multiple classification
 ## 🚀 How to Run
 1. Clone the repo:  
    ```bash
-   git clone https://github.com/Aarongho/portfolio-projects.git
+   git clone https://github.com/yourusername/portfolio-projects.git
    cd portfolio-projects/customer-segmentation
