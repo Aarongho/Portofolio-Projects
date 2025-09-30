@@ -56,13 +56,6 @@ The goal of this project is to **normalize the database** and implement SQL tabl
 - ⚠️ Limitation: Current design is static and assumes perfect data input.  
 - 🔍 Next Step: add **stored procedures**, **triggers for validation**, and possibly integrate with **a web frontend** for real-time export operations.  
 
----
-
-## 🚀 How to Run
-1. Import `transporindo.sql` into MySQL / MariaDB  
-2. Open in Workbench or phpMyAdmin  
-3. Run `CREATE DATABASE` and `CREATE TABLE` scripts from Chapter 6  
-4. Query tables to explore the schema  
 
 ---
 
