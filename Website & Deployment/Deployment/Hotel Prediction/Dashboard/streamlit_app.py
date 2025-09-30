@@ -5,9 +5,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import shap
 
-with open('/Users/aaron/Documents/SEMESTER 4/Model Deployment/UTS/Dashboard/xgb_model.pkl', 'rb') as file:
+# ===========================
+# Load Model & Dataset
+# ===========================
+with open("xgb_model.pkl", "rb") as file:
     model = pickle.load(file)
 
+@st.cache_data
+def load_data():
+    return pd.read_csv("Dataset_B_hotel.csv")
+
+df = load_data()
+
+# ===========================
+# Mapping Dictionaries
+# ===========================
 meal_plan_map = {
     "No Meal": 0,
     "Meal Type 1": 1,
@@ -34,21 +46,22 @@ room_type_map = {
     "Tipe 7 ": 6
 }
 
+# ===========================
+# Streamlit UI
+# ===========================
 st.set_page_config(page_title="Prediction Cancelling Hotel", page_icon="🏨", layout="centered")
 st.markdown("<h1 style='text-align: center;'>Prediction On Cancelling Booking Hotel 🏨</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
-@st.cache_data
-def load_data():
-    return pd.read_csv("/Users/aaron/Documents/SEMESTER 4/Model Deployment/UTS/Dataset_B_hotel.csv")
-
-df = load_data()
-
-st.markdown("<h4 style='text-align: center;'>Here's an example of the Raw Hotel Dataset that is given in the question!</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center;'>Here's an example of the Raw Hotel Dataset</h4>", unsafe_allow_html=True)
 with st.expander("📂 Raw Data "):
     st.dataframe(df.head(10))
 
-st.markdown("<h4 style='text-align: center;'>Input The Data you want to predict 🔮!</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center;'>Input Data to Predict 🔮</h4>", unsafe_allow_html=True)
+
+# ===========================
+# Input Form
+# ===========================
 with st.form("booking_form"):
     st.subheader("📋 Informasi Pemesanan")
     
@@ -77,10 +90,11 @@ with st.form("booking_form"):
         avg_price_per_room = st.number_input("💸 Harga Rata-Rata Kamar", min_value=0.0, value=100.0)
         no_of_special_requests = st.number_input("📝 Jumlah Request Khusus", min_value=0, value=0)
 
-    st.markdown("")
-
     submit = st.form_submit_button("🔮 Prediksi Sekarang")
 
+# ===========================
+# Prediction Logic
+# ===========================
 if submit:
     with st.spinner("⏳ Sedang memproses prediksi..."):
         input_data = pd.DataFrame([[
@@ -99,21 +113,23 @@ if submit:
             'avg_price_per_room', 'no_of_special_requests'
         ])
 
+        # Predict
         prediction = model.predict(input_data)
-        prediction_prob = model.predict_proba(input_data)[:, 1] 
+        prediction_prob = model.predict_proba(input_data)[:, 1]
 
+        # Show input
         st.subheader("📝 Data Input By User")
         st.dataframe(input_data)
 
+        # Probability
         st.subheader("📊 Probability Prediction")
         st.write(f"Probability that the booking canceled: {prediction_prob[0]:.4f}")
-        st.write(f"Probability that the booking not canceled {1 - prediction_prob[0]:.4f}")
+        st.write(f"Probability that the booking not canceled: {1 - prediction_prob[0]:.4f}")
 
         fig, ax = plt.subplots(figsize=(6, 4))
         colors = ['#FF6B6B', '#4CAF50']
-        labels = ['Not Canceled', 'Canceled']
+        labels = ['Canceled', 'Not Canceled']
         probs = [prediction_prob[0], 1 - prediction_prob[0]]
-
         bars = ax.bar(labels, probs, color=colors)
         ax.set_ylim(0, 1)
         ax.set_title("Probability of Booking Outcome")
@@ -121,13 +137,14 @@ if submit:
         ax.bar_label(bars, fmt='%.2f', padding=3)
         st.pyplot(fig)
 
+        # SHAP
         st.markdown("### 🧠 Feature Contribution to the Prediction")
         explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(input_data)
+        shap_values = explainer(input_data)
 
         shap_df = pd.DataFrame({
             'Feature': input_data.columns,
-            'SHAP Value': shap_values[0]
+            'SHAP Value': shap_values.values[0]
         }).sort_values(by='SHAP Value', key=abs, ascending=False)
 
         fig2, ax2 = plt.subplots(figsize=(8, 5))
@@ -135,6 +152,7 @@ if submit:
         ax2.set_title("Feature Impact on This Prediction")
         st.pyplot(fig2)
 
+        # Final Result
         hasil = "✅ Booking Not Canceled!" if prediction[0] == 1 else "❌ Booking Canceled!"
         st.markdown("---")
         st.subheader("🎯 Prediction Result : ")
