@@ -1,0 +1,6 @@
+Hasil Deployment Bisa diAkses di link ini:
+https://deploymentuas-ctb59sqxtf3ypwhmajsm6t.streamlit.app
+https://deploymentuas-production.up.railway.app
+https://deploymentuas-production.up.railway.app/docs
+
+
