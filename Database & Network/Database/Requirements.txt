@@ -1,0 +1,3 @@
+MySQL
+SQL Workbench / phpMyAdmin
+ERD Tool (draw.io / Lucidchart / MySQL Workbench)
