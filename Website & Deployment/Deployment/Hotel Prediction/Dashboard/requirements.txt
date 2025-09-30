@@ -1,5 +1,7 @@
 streamlit
 pandas
+scikit-learn
+xgboost
 matplotlib
 seaborn
-shap
+shap==0.41.0
