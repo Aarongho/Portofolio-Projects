@@ -1,0 +1,150 @@
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+  position: relative;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  height: 60px;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-center {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-center a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  transition: all 0.3s ease; 
+}
+
+.nav-center a:hover {
+  transform: scale(1.2); 
+  text-decoration: underline;
+}
+
+img {
+  height: 24px;
+  width: auto;
+}
+
+
+.responsive-video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+
+
+span {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+img {
+  filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7));
+}
+
+
+.comment-bar {
+  display: flex;
+  align-items:end;
+  gap: 15px; 
+  color: white;
+  justify-content: space-around;
+  position: fixed;
+  top: 85%;
+  width: 100vw;
+}
+
+.comment-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stack-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  gap: 4px;
+}
+
+.stack-group img {
+  width: 24px;  
+  height: 24px;
+}
+
+.comment-bar span{
+  background: rgba(0, 0, 0, 0.2); 
+  backdrop-filter: blur(8px);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.comment-bar img{
+  background: rgba(0, 0, 0, 0.2); 
+  backdrop-filter: blur(8px);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+#berikomentar{
+padding-right: 40px;
+}
+
+.comment-box {
+  position: fixed;
+  top: 75%;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: white;
+  z-index: 10;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px); 
+  padding: 5px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.comment img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 50%; 
+}
