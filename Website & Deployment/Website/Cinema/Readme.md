@@ -53,7 +53,7 @@ The project is divided into two parts:
 ## 📌 Evaluation / Next Step
 - ✅ Website is fully functional, attractive, and responsive across desktop & mobile.  
 - ⚠️ Validation works but can be enhanced with stronger logic and async checks.  
-- 🔍 Next Step: add **ticket booking system**, **membership login**, and integrate with backend for live movie updates.  
+- 🔍 Next Step: add a **membership login**, and integrate with backend for live movie updates.  
 
 ---
 
