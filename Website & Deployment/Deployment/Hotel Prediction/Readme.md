@@ -1,31 +1,32 @@
-# ⚕️🤖🚀 Obesity Prediction – ML Deployment
+# 🏨📉🤖 Hotel Booking Cancellation Prediction – Streamlit App
 
 ## 📂 Project Overview
-This project develops and deploys a **machine learning pipeline** to predict obesity categories based on personal, dietary, and lifestyle information.  
-The end product is a **Flask web app** where users can input their data and instantly get a prediction, along with feature importance visualization.
+This project develops and deploys a **machine learning pipeline** to predict whether a hotel booking will be canceled.  
+The deployment is done with **Streamlit**, allowing users to input booking details and receive real-time predictions with probability scores and feature explanations.
 
 ---
 
 ## 🔄 Pipeline & Approach
 1. **Data Preprocessing**
-   - Handled categorical and numerical features
-   - Scaling and encoding applied consistently
+   - Categorical + numerical features handled with encoding and scaling  
+   - Features include adults, children, lead time, room type, meal plan, etc.  
 
 2. **Model Training**
-   - Machine learning classifiers trained (e.g., Random Forest, XGBoost)
-   - Best model saved with `joblib`
+   - Trained classifiers (e.g., Random Forest, Gradient Boosting)  
+   - Saved best model with `joblib`  
 
-3. **Deployment**
-   - Flask app integrates trained model into a web form
-   - Displays predictions, probabilities, and feature importance
-   - Deployed via GitHub + Live Demo (Heroku/Render)
+3. **Deployment (Streamlit)**
+   - User inputs booking data through a web form  
+   - Model returns prediction: *Canceled* or *Not Canceled*  
+   - Probabilities displayed as chart + SHAP feature contribution  
 
 ---
 
 ## 🎯 What I Learned
-- ⚕️ How to prepare lifestyle and health data for obesity prediction  
-- 🤖 Building a complete ML pipeline from preprocessing to prediction  
-- 🚀 Deploying ML models with Flask and connecting them to a web interface  
+- 🏨 Building predictive models for hotel booking cancellation  
+- 📉 Applying SHAP values for model explainability  
+- 🤖 Creating end-to-end ML pipelines (preprocessing → model → deployment)  
+- 🚀 Deploying machine learning apps on **Streamlit Cloud**  
 
 ---
 
@@ -33,20 +34,19 @@ The end product is a **Flask web app** where users can input their data and inst
 - **Python**
 - **NumPy, Pandas, Scikit-learn**
 - **Matplotlib, Seaborn**
-- **Flask**
-- **Joblib (model serialization)**
+- **SHAP (explainability)**
+- **Streamlit (deployment)**
 
 ---
 
 ## 📌 Evaluation / Next Step
-- ✅ Model deployment works and predictions are interactive.  
-- ✅ Feature importance improves explainability for end users.  
-- ⚠️ Current dataset is limited; may not capture global demographics.  
-- 🔍 Next Step: improve with **larger dataset**, add **user authentication**, and test deep learning methods for higher accuracy.  
+- ✅ Deployed app predicts booking cancellations with probability and feature explanation.  
+- ✅ SHAP visualizations make predictions transparent.  
+- ⚠️ Model trained on limited dataset; generalization may be restricted.  
+- 🔍 Next Step: retrain with larger hotel booking datasets, add more business features (seasonality, holidays), and expand deployment with API integration.  
 
 ---
 
 ## 🔗 Links
-- 📂 [GitHub Repository](https://github.com/yourusername/obesity-prediction)  
-- 💻 [Live Demo](https://your-live-demo-link.onrender.com/)  
-
+- 📂 [GitHub Repository](https://github.com/yourusername/hotel-booking-cancellation)  
+- 💻 [Live Demo](https://your-streamlit-app-link.streamlit.app/)  
